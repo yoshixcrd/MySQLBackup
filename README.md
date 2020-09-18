@@ -14,10 +14,16 @@ Clonar o Repositório
 git clone https://github.com/fernandocalheirox/MySQLbackup.git
 ```
 
-Executar o script
+Para executar um Backup de todas as DATABASES do MySQL:
 
 ```
-powershell -f mysql-backup.ps1 
+powershell -f mysql-backup.ps1 -alldatabases
+```
+
+Para executar um Backup de uma DATABASE especifica do MySQL:
+
+```
+powershell -f mysql-backup.ps1 -database <DATABASE>
 ```
 
 ## Diretório de saida

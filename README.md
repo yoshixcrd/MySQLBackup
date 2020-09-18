@@ -1,6 +1,6 @@
 # MySQLBackup
 
-![banne](https://user-images.githubusercontent.com/26009394/93550452-cadea200-f941-11ea-83d5-03bf3740dec4.png)
+![image](https://user-images.githubusercontent.com/26009394/93598735-7fed7a80-f993-11ea-8938-19e699e241a4.png)
 
 
 ## O que é 
@@ -15,17 +15,12 @@ Clonar o Repositório
 git clone https://github.com/fernandocalheirox/MySQLbackup.git
 ```
 
-Para executar um Backup de todas as DATABASES do MySQL:
+Para ver os possíveis parâmetros:
 
 ```
-powershell -f mysql-backup.ps1 -alldatabases
+powershell -f mysql-backup.ps1 -help
 ```
 
-Para executar um Backup de uma DATABASE especifica do MySQL:
-
-```
-powershell -f mysql-backup.ps1 -database <DATABASE>
-```
 
 ## Diretório de saida
 

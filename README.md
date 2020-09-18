@@ -1,6 +1,7 @@
 # MySQLBackup
 
-![banne](https://user-images.githubusercontent.com/26009394/93542884-91516b00-f930-11ea-8c1c-b43de7bb5609.png)
+![image](https://user-images.githubusercontent.com/26009394/93598735-7fed7a80-f993-11ea-8938-19e699e241a4.png)
+
 
 ## O que é 
 
@@ -14,11 +15,12 @@ Clonar o Repositório
 git clone https://github.com/fernandocalheirox/MySQLbackup.git
 ```
 
-Executar o script
+Para ver os possíveis parâmetros:
 
 ```
-powershell -f mysql-backup.ps1 
+powershell -f mysql-backup.ps1 -help
 ```
+
 
 ## Diretório de saida
 

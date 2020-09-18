@@ -5,7 +5,7 @@
 
 ## O que é 
 
-É um script para automação de backups do banco de dados(MySQL), ele gera um arquivo de backup para cada DATABASE separada, contendo no nome do arquivo a data de geração, ele também gera um único arquivo de backup completo que contém todas as DATABASE do banco de dados(MySQL), logo em seguida todos os arquivos gerados são compactados em um únco arquivo em formato RAR.
+É um script para automação de backups do banco de dados(MySQL), após realizar os backups ele compacta os arquivos gerados pelo MySQLDump em um unico arquivo RAR.
 
 ## Instalação e uso
 
@@ -21,7 +21,40 @@ Para ver os possíveis parâmetros:
 powershell -f mysql-backup.ps1 -help
 ```
 
+## Valores Padrões
 
-## Diretório de saida
+### Usuario padrão
 
-__C:\Backup-MySQL__
+```
+root
+```
+
+### Senha padrão
+
+```
+toor
+```
+
+### Servidor padrão
+
+```
+localhost
+```
+
+### Path de saida dos backups padrão
+
+```
+C:\Backup-MySQL
+```
+
+### Local do arquivo MySqlDump.exe no MySQL Server 8.0
+
+```
+C:\Program Files\MySQL\MySQL Server 8.0\bin\mysqldump.exe
+```
+
+### Local do arquivo MySql.Data.dll
+
+```
+MySQLbackup/dll/MySql.Data.dll
+```

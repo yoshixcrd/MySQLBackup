@@ -7,7 +7,7 @@
 #                                                                          #
 ############################################################################
 
-param($database = $null, [switch]$alldatabases = $true, $server = "localhost", $user = "root", $password = " ", $path_backup = "C:\Backup-MySQL\", [switch]$help = $false);
+param($database = $null, [switch]$alldatabases = $true, $server = "localhost", $user = "root", $password = "toor", $path_backup = "C:\Backup-MySQL\", [switch]$help = $false);
 
 
 $banner = @"
@@ -41,30 +41,25 @@ if($help) {
 }
 
 
+if (($database -eq $null) -and ($alldatabases -eq $null)) {
+    Write-Host $helpOptions;
+    exit(0);
+}
+
+
 # Pega a hora atual do sistema
 $timestamp = Get-Date -format "yyyy-MM-dd"
 
 # Local do arquivo MySqlDump.exe no MySQL Server 8.0
 $mysqldump = "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysqldump.exe"
 
-# Server Configs
-$mysql_server = $server;
-$mysql_user = $user;
-$mysql_password = $password;
-
 # Path aonde o backup sera gerado
 $PathBackup = $path_backup + $timestamp + "\";
+
 # Caso o diretório/subdiretórios não exista, é criado
 if (!(Test-Path -Path $PathBackup)) {
     New-Item -Path $PathBackup -ItemType Directory | Out-Null;
 }
-
-
-if (($database -eq $null) -and ($alldatabases -eq $null)) {
-    Write-Host $helpOptions;
-    exit(0);
-}
-
 
 # Pega o local atual onde o script está sendo executado.
 $Localizao = [System.IO.Path]::GetDirectoryName($myInvocation.MyCommand.Definition);
@@ -78,11 +73,9 @@ $PathMySQLData = $Localizao + "\dll\MySql.Data.dll"
 
 # Cria a conexão com a Database 'information_schema' do MySQL
 $conexao = New-Object -TypeName MySql.Data.MySqlClient.MySqlConnection;
-$conexao.ConnectionString = "SERVER=$mysql_server;DATABASE=information_schema;UID=$mysql_user;PWD=$mysql_password";
+$conexao.ConnectionString = "SERVER=$server;;DATABASE=information_schema;UID=$user;PWD=$password";
 $conexao.Open()
     
-
-
 # Consulta para obter os nomes dos DATABASES em ordem ascendente 
 $command = New-Object -TypeName MySql.Data.MySqlClient.MySqlCommand;
 
@@ -98,30 +91,30 @@ $dr = $command.ExecuteReader();
 if(!($database -eq $null)) {
 
     Write-Host "[+] Gerando Backup da DATABASE passada como paramêtro !"
-        # Gera um arquivo .sql para a DATABASE passada como parametro
+    # Gera um arquivo .sql para a DATABASE passada como parametro
     while ($dr.Read()) {
 
-            # Armazena o nome do Database retornada pela query
+        # Armazena o nome do Database retornada pela query
         $dbname = [string]$dr.GetString(0);
         if($dbname -match $database){
-                # Verifica se a database existe no banco de dados
+            # Verifica se a database existe no banco de dados
             Write-Host "[+] Backup database: " $dr.GetString(0);
         
-                    # Define o nome do arquivo de BACKUP
+            # Define o nome do arquivo de BACKUP
             $backupFilename = $timestamp + "-" + $dr.GetString(0) + ".sql";
             $backupPathFile = $PathBackup + $backupFilename;
         
-                    # Verifica se o arquivo/Path já existe, caso exista remove
+            # Verifica se o arquivo/Path já existe, caso exista remove
             if (Test-Path($backupPathFile)) {
                 Write-host "`n O arquivo de Backup " $backupFilename " ja existe";
                 Write-Host "Deletando o arquivo localizado em " $backupPathFile;
                 Remove-Item $backupPathFile;
             }
         
-                    # Gera o arquivo Backup
-            cmd /c " `"$mysqldump`" -h $mysql_server -u $mysql_user -p$mysql_password $dbname > $backupPathFile ";
+            # Gera o arquivo Backup
+            cmd /c " `"$mysqldump`" -h $server; -u $user -p$password $dbname > $backupPathFile ";
         
-                    # Verifica se o arquivo de BACKUP foi gerado 
+            # Verifica se o arquivo de BACKUP foi gerado 
             if (Test-Path($backupPathFile)) {
                 Write-Host "`n[+] Backup criado em: " $backupPathFile;
             }
@@ -145,21 +138,21 @@ elseif (!($alldatabases -eq $false)) {
         # Verifica se a database existe no banco de dados
         Write-Host "[+] Backup database: " + $dr.GetString(0) + "`n";
 
-            # Define o nome do arquivo de BACKUP
+        # Define o nome do arquivo de BACKUP
         $backupFilename = $timestamp + "-" + $dr.GetString(0) + ".sql";
         $backupPathFile = $PathBackup + $backupFilename;
 
-            # Verifica se o arquivo/Path já existe, caso exista remove
+        # Verifica se o arquivo/Path já existe, caso exista remove
         if (Test-Path($backupPathFile)) {
             Write-host "`n O arquivo de Backup " $backupFilename " ja existe";
             Write-Host "Deletando o arquivo localizado em " $backupPathFile;
             Remove-Item $backupPathFile;
         }
 
-            # Gera o arquivo Backup
-        cmd /c " `"$mysqldump`" -h $mysql_server -u $mysql_user -p$mysql_password $dbname > $backupPathFile ";
+        # Gera o arquivo Backup
+        cmd /c " `"$mysqldump`" -h $server; -u $user -p$password $dbname > $backupPathFile ";
 
-            # Verifica se o arquivo de BACKUP foi gerado 
+        # Verifica se o arquivo de BACKUP foi gerado 
         if (Test-Path($backupPathFile)) {
             Write-Host "`n[+] Backup criado em: " $backupPathFile;
         }
@@ -180,7 +173,7 @@ elseif (!($alldatabases -eq $false)) {
     }
 
     # Gera o BackupFull
-    cmd /c " `"$mysqldump`" -h $mysql_server -u $mysql_user -p$mysql_password > $PathBackupFull ";
+    cmd /c " `"$mysqldump`" -h $server; -u $user -p$password > $PathBackupFull ";
 
     # Verifica se o Backup Completo foi gerado
     if(Test-Path($PathBackupFull)) {
